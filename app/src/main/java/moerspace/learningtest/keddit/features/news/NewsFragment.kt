@@ -1,18 +1,21 @@
 package moerspace.learningtest.keddit.features.news
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import android.support.design.widget.Snackbar
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.news_fragment.*
 import moerspace.learningtest.keddit.R
-import moerspace.learningtest.keddit.commons.RedditNewsItem
+import moerspace.learningtest.keddit.commons.RxBaseFragment
 import moerspace.learningtest.keddit.commons.extentions.inflate
 import moerspace.learningtest.keddit.features.news.adapter.NewsAdapter
 
-class NewsFragment : Fragment() {
+class NewsFragment : RxBaseFragment() {
+    private val newsManager by lazy { NewsManager() }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return container?.inflate(R.layout.news_fragment)
@@ -26,16 +29,23 @@ class NewsFragment : Fragment() {
         initAdapter()
 
         if (savedInstanceState == null) {
-            val news = (1..10).map { RedditNewsItem(
-                    "author$it",
-                    "Title $it",
-                    it,
-                    1457207701L - it * 200,
-                    "https://picsum.photos/200/200?image=$it",
-                    "url"
-            ) }
-            (newsList.adapter as NewsAdapter).addNews(news)
+            requestNews()
         }
+    }
+
+    private fun requestNews() {
+        val disposable = newsManager.getNews()
+                .subscribeOn(Schedulers.io())
+                .doOnSuccess {
+                    (newsList.adapter as NewsAdapter).addNews(it)
+                }
+                .doOnError { t ->
+                    Snackbar.make(newsList, t.message ?: "", Snackbar.LENGTH_LONG).show()
+                }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe()
+
+        disposables.add(disposable)
     }
 
     private fun initAdapter() {
