@@ -1,8 +1,8 @@
 package moerspace.learningtest.keddit.features.news.adapter
 
-import android.support.v4.util.SparseArrayCompat
-import android.support.v7.widget.RecyclerView
+import android.util.SparseArray
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import moerspace.learningtest.keddit.commons.RedditNewsItem
 import moerspace.learningtest.keddit.commons.adapter.AdapterConstants
 import moerspace.learningtest.keddit.commons.adapter.ViewType
@@ -10,7 +10,7 @@ import moerspace.learningtest.keddit.commons.adapter.ViewTypeDelegateAdapter
 
 class NewsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var items: ArrayList<ViewType> = ArrayList()
-    private var delegateAdapters = SparseArrayCompat<ViewTypeDelegateAdapter>()
+    private var delegateAdapters = SparseArray<ViewTypeDelegateAdapter>()
 
     private val loadingItem = object : ViewType {
         override fun getViewType(): Int = AdapterConstants.LOADING

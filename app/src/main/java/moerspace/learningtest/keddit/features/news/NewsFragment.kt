@@ -1,11 +1,11 @@
 package moerspace.learningtest.keddit.features.news
 
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.news_fragment.*

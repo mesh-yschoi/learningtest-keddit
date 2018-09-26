@@ -1,7 +1,7 @@
 package moerspace.learningtest.keddit.features.news.adapter
 
-import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.news_item.view.*
 import moerspace.learningtest.keddit.R
 import moerspace.learningtest.keddit.commons.RedditNewsItem
