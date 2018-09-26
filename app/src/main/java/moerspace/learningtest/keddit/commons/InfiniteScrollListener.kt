@@ -1,8 +1,8 @@
 package moerspace.learningtest.keddit.commons
 
-import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import timber.log.Timber
 
 class InfiniteScrollListener(val func: () -> Unit, val layoutManager: LinearLayoutManager) :
     RecyclerView.OnScrollListener() {
@@ -30,7 +30,7 @@ class InfiniteScrollListener(val func: () -> Unit, val layoutManager: LinearLayo
             }
             if (loading.not() && (totalItemCount - visibleItemCount) <= (firstVisibleItem + visibleThreshold)) {
                 // End has been reached
-                Log.i("InfiniteScrollListener", "End reached")
+                Timber.i("End reached")
                 func()
                 loading = true
             }
