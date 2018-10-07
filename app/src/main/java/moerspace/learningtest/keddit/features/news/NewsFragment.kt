@@ -25,22 +25,34 @@ class NewsFragment : RxBaseFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return container?.inflate(R.layout.news_fragment)
-    }
+    ): View? = container?.inflate(R.layout.news_fragment)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        newsList.setHasFixedSize(true)
-        val linearLayoutManager = LinearLayoutManager(context)
-        newsList.layoutManager = linearLayoutManager
-        newsList.clearOnScrollListeners()
-        newsList.addOnScrollListener(InfiniteScrollListener({ requestNews() }, linearLayoutManager))
+
+        newsList.apply {
+            setHasFixedSize(true)
+            val linearLayoutManager = LinearLayoutManager(context)
+            layoutManager = linearLayoutManager
+            clearOnScrollListeners()
+            addOnScrollListener(InfiniteScrollListener({ requestNews() }, linearLayoutManager))
+        }
 
         initAdapter()
 
-        if (savedInstanceState == null) {
+        if (savedInstanceState != null && savedInstanceState.containsKey(KEY_REDDIT_NEWS)) {
+            redditNews = savedInstanceState.getParcelable(KEY_REDDIT_NEWS)
+            redditNews?.news?.let { (newsList.adapter as NewsAdapter).clearAndAddNews(it) }
+        } else {
             requestNews()
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        val redditNewsItems = (newsList.adapter as NewsAdapter).getNews()
+        if (redditNews != null && redditNewsItems.isNotEmpty()) {
+            outState.putParcelable(KEY_REDDIT_NEWS, redditNews?.copy(news = redditNewsItems))
         }
     }
 
@@ -70,5 +82,9 @@ class NewsFragment : RxBaseFragment() {
         if (newsList.adapter == null) {
             newsList.adapter = NewsAdapter()
         }
+    }
+
+    companion object {
+        private const val KEY_REDDIT_NEWS = "redditNews"
     }
 }

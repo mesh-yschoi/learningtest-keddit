@@ -20,7 +20,7 @@ class RestAPI {
         val okHttpClient = OkHttpClient.Builder()
             .addInterceptor(HttpLoggingInterceptor(HttpLoggingInterceptor.Logger { message ->
                 Timber.tag(
-                    "OkHttp"
+                    TAG_OK_HTTP
                 ).d(message)
             }).apply {
                 level = HttpLoggingInterceptor.Level.BODY
@@ -28,7 +28,7 @@ class RestAPI {
             .build()
 
         val retrofit = Retrofit.Builder()
-            .baseUrl("https://www.reddit.com")
+            .baseUrl(BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
@@ -38,5 +38,10 @@ class RestAPI {
 
     fun getNews(after: String, limit: String): Call<RedditNewsResponse> {
         return redditApi.getTop(after, limit)
+    }
+
+    companion object {
+        const val BASE_URL: String = "https://www.reddit.com"
+        const val TAG_OK_HTTP: String = "OkHttp"
     }
 }
