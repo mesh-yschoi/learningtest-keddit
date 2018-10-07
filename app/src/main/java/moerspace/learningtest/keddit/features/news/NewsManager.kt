@@ -1,15 +1,16 @@
 package moerspace.learningtest.keddit.features.news
 
 import io.reactivex.Single
-import moerspace.learningtest.keddit.api.RestAPI
+import moerspace.learningtest.keddit.api.NewsAPI
+import moerspace.learningtest.keddit.api.NewsRestAPI
 import moerspace.learningtest.keddit.commons.RedditNews
 import moerspace.learningtest.keddit.commons.RedditNewsItem
 
-class NewsManager(private val api: RestAPI = RestAPI()) {
+class NewsManager(private val newsApi: NewsAPI = NewsRestAPI()) {
 
     fun getNews(after: String, limit: String = "10"): Single<RedditNews> {
         return Single.create { emitter ->
-            val callResponse = api.getNews(after, limit)
+            val callResponse = newsApi.getNews(after, limit)
             val response = callResponse.execute()
             val redditNewsResponse = response.body()
             if (response.isSuccessful && redditNewsResponse != null) {
