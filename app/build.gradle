@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'de.mannodermaus.android-junit5'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "moerspace.learningtest.keddit"
-        minSdkVersion 14
+        minSdkVersion 16
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -19,31 +19,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    sourceSets.each {
-        it.java.srcDirs += "src/$it.name/kotlin"
-    }
-    testOptions {
-        junitPlatform {
-            filters {
-                engines {
-                    include 'spek2'
-                }
-            }
-            jacocoOptions {
-                // here goes all jacoco config, for example
-                html.enabled = true
-                xml.enabled = false
-                csv.enabled = false
-                unitTests.all {
-                    testLogging.events = ["passed", "skipped", "failed"]
-                }
-            }
-        }
-    }
 }
 
 androidExtensions {
     experimental = true
+}
+
+kapt {
+    correctErrorTypes = true
 }
 
 dependencies {
@@ -68,16 +51,13 @@ dependencies {
 
     implementation 'com.jakewharton.timber:timber:4.7.1'
 
+    implementation 'com.airbnb.android:mvrx:0.6.0'
+    implementation 'com.airbnb.android:epoxy:3.0.0-rc1'
+    kapt 'com.airbnb.android:epoxy-processor:3.0.0-rc1'
+
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.1.0-beta01'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-beta01'
+    androidTestImplementation 'androidx.test:runner:1.1.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
 
     testImplementation 'org.mockito:mockito-core:2.+'
-
-    // spek
-    testImplementation "org.spekframework.spek2:spek-dsl-jvm:2.0.0-rc.1"
-    testImplementation "org.spekframework.spek2:spek-runner-junit5:2.0.0-rc.1"
-
-    // spek requires kotlin-reflect, omit when already in classpath
-    testImplementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 }
